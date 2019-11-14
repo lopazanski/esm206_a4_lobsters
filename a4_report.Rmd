@@ -1,0 +1,83 @@
+---
+title: "A4 Report"
+author: "Cori Lopazanski"
+date: "11/14/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## INTRODUCTION: 
+
+A short (7 - 8 sentence) introduction that helps the reader understand the purpose/motivation of the research, and previews the content of the report. 
+
+## DATA AND METHODS: 
+
+A brief ‘Data and Methods’ section (5 - 6 sentences) summarizing the data and how it was analyzed. Briefly describe the variables being studied in this report. Include the types of statistical tests performed, significance level used, and software (with version) for analysis.
+
+## RESULTS: 
+
+Prepare finalized data visualizations and perform statistical analyses (as indicated) to do the following. You are expected to also add useful text that weaves the pieces together into a cohesive Results section (i.e., this should not just be a series of figures and without useful description & text flow between them). 
+
+### Results A: 
+
+Visually explore changes in annual lobster abundance (counts) by site. After grouping observations to find lobster counts for each year, create a finalized data visualization (no modeling/stats needed) showing changes in annual lobster abundance at the five sites over time. You should decide how to best present the data. Make your data visualization correct, clear, responsible, and professional. Details matter (e.g. is it easier to read a legend or label lines directly? How can I designate between MPA and non-MPA sites? And many more decisions!). Add a figure caption below the graph.
+
+In text (above or below the graph for Results A), describe general / interesting trends that you observe for lobster abundance at the 5 sites. 
+
+```{r}
+# Attach packages and read in the data
+library(tidyverse)
+library(janitor) # for clean_names()
+
+lobster <- read_csv("lobster_abundance_sbc_lter.csv", na = c("-99999")) %>% 
+  clean_names()
+  
+# Group observations to find lobster counts for each year
+lobster_counts <- lobster %>% 
+  group_by(year, site) %>% 
+  summarize(
+    annual_abundance = sum(count)
+  )
+
+
+# Visualize changes in annual lobster abundance at five sites over time
+ggplot(data = lobster_counts, aes(x = year, y = annual_abundance)) +
+  geom_point(aes(color = site))
+
+```
+
+
+### Results B. 
+
+Visually explore lobster size distribution shifts by comparing lobster sizes in 2012 and 2018. Visually explore the size distributions for lobsters observed at the 5 different sites in 2012, and in 2018 (i.e. you will have a total of 10 size distributions shown: for each of the 5 sites, one for 2012 and one for 2018). Make a finalized graph that clearly and professionally shows community size distributions at each site in the 2 years, allowing the reader to easily interpret distribution shifts. Add a figure caption below the graph. 
+
+In text, describe general / interesting trends that you see in community size structure at different sites (again, considering MPA vs. non-MPA status) for lobsters between 2012 and 2018. 
+
+
+### Results C. 
+
+Compare mean lobster sizes at MPA vs. non-MPA sites in 2012 and 2018. Here, for each year (2012 and 2018) consolidate the size observations into only two groups: MPA and non-MPA lobsters. Then answer the following four questions: 
+
+For 2012 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
+For 2018 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
+For MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
+For non-MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
+
+In your report for Results C, you should at least include:
+
+A finalized table (interactive or static) that includes means, standard deviations, and sample sizes for the two groups (MPA and non-MPA sites) in 2012 and 2018. Add a caption (remember: table captions are above tables).
+
+In text in your report, describe the outcome of the statistical hypothesis tests using in-line referencing (e.g. do not copy and paste values from the output). Remember: the p-value is not enough. You should also describe more meaningful metrics for comparison. Here are some things you might consider including in your description: the actual differences in mean size between groups, % changes, measure of uncertainty (e.g. confidence interval), etc.
+
+## SUMMARY: 
+
+A brief summary of the major findings (pick 3 - 4) from your mini-report. A bullet-pointed list is fine, but the findings should be well-written, responsible (don’t overstate your findings), and refer to outcomes (e.g. figures, tables) in the Results section
+
+## REFERENCES: 
+
+References (including for data sources & literature cited in your introduction) that were used to prepare the report. Reference formatting matters - 
+
+
