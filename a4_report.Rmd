@@ -31,11 +31,8 @@ library(gghighlight)
 library(ggridges)
 library(effsize)
 library(ggjoy)
-<<<<<<< HEAD
 library(kableExtra)
-=======
 library(ggrepel)
->>>>>>> 5041a8a1abe8a5fe886244203befee3547d0e027
 
 lobster <- read_csv("lobster_abundance_sbc_lter.csv", na = c("-99999")) %>% 
   clean_names()
@@ -220,18 +217,18 @@ diff_non_mpa_d <- cohen.d(non_mpa_2012$size_mm, non_mpa_2018$size_mm)
 
 ```{r}
 # Table for means, SD, and sample size of lobster sizes and abundances in 2012 and 2018
-table_data <- summary_calc %>% 
+table_data <- as.tibble(summary_calc) %>% 
   select(protection, mean, sd, n) %>% 
   mutate(protection = ifelse(protection == "mpa", "MPA", "Non-MPA"))
   
 lobster_table <- table_data %>% 
-  kable(col.names = c("Year", "Protection", "Mean Size (mm)", "Standard Deviation", "Sample Size")) %>% 
+  kable(col.names = c("Protection", "Mean Size (mm)", "Standard Deviation", "Sample Size")) %>% 
   kable_styling(bootstrap_options = NULL,
                 full_width = F) %>% 
   group_rows("2012", 1, 2) %>% 
   group_rows("2018", 3, 4) %>% 
+  add_header_above(c("Mean lobster sizes inside and outside of MPAs" = 4))
   
-
 lobster_table
 ```
 
