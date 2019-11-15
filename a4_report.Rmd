@@ -37,7 +37,11 @@ library(gghighlight)
 library(ggridges)
 library(effsize)
 library(ggjoy)
+<<<<<<< HEAD
 library(kableExtra)
+=======
+library(ggrepel)
+>>>>>>> 5041a8a1abe8a5fe886244203befee3547d0e027
 
 lobster <- read_csv("lobster_abundance_sbc_lter.csv", na = c("-99999")) %>% 
   clean_names()
@@ -47,7 +51,12 @@ lobster_counts <- lobster %>%
   group_by(year, site) %>% 
   summarize(
     annual_abundance = sum(count)
-  )
+  ) %>% 
+  mutate(site2 = ifelse(site == "NAPL", "Naples", 
+                   ifelse(site == "MOHK", "Mohawk",
+                   ifelse(site == "IVEE", "Isla Vista",
+                    ifelse(site == "CARP", "Carpinteria", "Arroyo Quemado"))))) %>% 
+  mutate(protection = ifelse(site %in% c("NAPL", "IVEE"), "Marine Protected Area", "Unprotected Area"))
 
 ```
 
@@ -55,21 +64,32 @@ lobster_counts <- lobster %>%
 ```{r abundance over time}
 # Visualize changes in annual lobster abundance at five sites over time
 ggplot(data = lobster_counts, aes(x = year, y = annual_abundance)) +
-  geom_line(aes(color = site)) +
-  theme_minimal() +
-  gghighlight(site %in% c("IVEE", "NAPL")) + 
+  geom_line(aes(color = site2, label = site2, linetype = protection)) +
+  geom_label_repel(data = lobster_count_label, 
+                   box.padding = 0.5, 
+                   size = 3,
+                   nudge_x = 0.5, 
+                   min.segment.length = 5, 
+                   show.legend = FALSE,
+                   xlim = c(2012, 2020), 
+                   aes(x = year,
+                       y = annual_abundance,
+                       label = site2, 
+                       color = site2))+
+  guides(color = "none") +
   labs(
-    title = "Annual lobster abundance after MPA creation",
-    subtitle = "subtitle?",
+    title = "Annual lobster abundance following marine protected area creation in 2012",
     x = "Year",
-    y = "Annual Lobster Abundance"
-  ) +
+    y = "Annual Lobster Abundance",
+    linetype = NULL) +
+  theme_classic() +
+  scale_x_continuous(limits = c(2012, 2019), expand = c(0, 0.5)) +
+  scale_y_continuous(limits = c(0, 1000), expand = c(0,0)) +
   theme(
     plot.title = element_text(hjust = 0.5,
-                              size = 16),
-    plot.subtitle = element_text(hjust = 0.5, 
-                                 size = 8,
-                                 face = "italic"),
+                              size = 13),
+    legend.position = c(0.2, 0.8),
+    legend.background = element_rect(color = "white"),
     plot.caption = element_text(size = 6), 
     panel.grid.minor.x = element_blank(), 
     panel.grid.minor.y = element_blank())
@@ -110,7 +130,7 @@ ggplot(lobster_distributions, aes(x = size_mm, y = site2, fill = year))+
        caption = "Figure 2. Size distributions of the California Spiny Lobster at 5 sites in the Santa Barbara Channel\n(Naples and Isla Vista = within MPA; Mohawk, Arroyo Quemado, and Carpinteria = outside of MPA)\nin 2012 (red) and 2018 (blue). Sizes are measured as carapace length in mm.") 
   
 ```
-Both the MPA sites, Naples and Isla Vista, show visible increases in lobster size distribution from 2012 to 2018. Size distributions of lobsters in the non-MPA sites (Mohawk reef, Carpinteria, and Arroyo Quemado) appear relatively similar in both 2012 and 2018; however, Carpinteria and Arroyo Quemado show a modest increase in overall abundance between the two years.
+Both the MPA sites, Naples and Isla Vista, show visible increases in lobster size distribution from 2012 to 2018 (Fig. 2). Size distributions of lobsters in the non-MPA sites (Mohawk reef, Carpinteria, and Arroyo Quemado) appear relatively similar in both 2012 and 2018; however, Carpinteria and Arroyo Quemado show a modest increase in overall abundance between the two years.
 
 
 ### Results C. 
@@ -209,10 +229,11 @@ table_data <- summary_calc %>%
   
 lobster_table <- table_data %>% 
   kable(col.names = c("Year", "Protection", "Mean Size (mm)", "Standard Deviation", "Sample Size")) %>% 
-  kable_styling(bootstrap_options = "striped",
+  kable_styling(bootstrap_options = NULL,
                 full_width = F) %>% 
   group_rows("2012", 1, 2) %>% 
-  group_rows("2018", 3, 4)
+  group_rows("2018", 3, 4) %>% 
+  
 
 lobster_table
 ```
