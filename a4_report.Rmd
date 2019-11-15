@@ -37,6 +37,7 @@ library(gghighlight)
 library(ggridges)
 library(effsize)
 library(ggjoy)
+library(kableExtra)
 
 lobster <- read_csv("lobster_abundance_sbc_lter.csv", na = c("-99999")) %>% 
   clean_names()
@@ -101,18 +102,13 @@ ggplot(lobster_distributions, aes(x = size_mm, y = site2, fill = year))+
   geom_joy(data = filter(lobster_distributions, year == "2018"), alpha = 0.4, scale = 0.9)+
   theme_joy()+
   theme_minimal()+
-  theme(plot.caption = element_text(hjust = 0))+
-  labs(x = "Size (mm)",
+  theme(plot.caption = element_text(hjust = 0,vjust = 0))+
+  labs(x = "Carapace length (mm)",
        y = "Site",
-       fill = "Year",
-       title = "CA Spiny Lobster size distributions in the Sana Barbara Channel",
+       fill = NULL,
+       title = "CA Spiny Lobster size distributions in the Santa Barbara Channel",
        caption = "Figure 2. Size distributions of the California Spiny Lobster at 5 sites in the Santa Barbara Channel\n(Naples and Isla Vista = within MPA; Mohawk, Arroyo Quemado, and Carpinteria = outside of MPA)\nin 2012 (red) and 2018 (blue). Sizes are measured as carapace length in mm.") 
   
-  
-#geom_text(lobster_distributions, stat = "Year" mapping = NULL, aes("MPA", x = 150, y = "Naples" ))
-  
-
-
 ```
 Both the MPA sites, Naples and Isla Vista, show visible increases in lobster size distribution from 2012 to 2018. Size distributions of lobsters in the non-MPA sites (Mohawk reef, Carpinteria, and Arroyo Quemado) appear relatively similar in both 2012 and 2018; however, Carpinteria and Arroyo Quemado show a modest increase in overall abundance between the two years.
 
@@ -204,6 +200,24 @@ diff_non_mpa_t <- t.test(non_mpa_2012$size_mm, non_mpa_2018$size_mm)
 diff_non_mpa_d <- cohen.d(non_mpa_2012$size_mm, non_mpa_2018$size_mm)
 
 ```
+
+```{r}
+# Table for means, SD, and sample size of lobster sizes and abundances in 2012 and 2018
+table_data <- summary_calc %>% 
+  select(protection, mean, sd, n) %>% 
+  mutate(protection = ifelse(protection == "mpa", "MPA", "Non-MPA"))
+  
+lobster_table <- table_data %>% 
+  kable(col.names = c("Year", "Protection", "Mean Size (mm)", "Standard Deviation", "Sample Size")) %>% 
+  kable_styling(bootstrap_options = "striped",
+                full_width = F) %>% 
+  group_rows("2012", 1, 2) %>% 
+  group_rows("2018", 3, 4)
+
+lobster_table
+```
+
+
 Answers to questions with in-line referencing:
 
 - For 2012 observations, is there a significant difference in lobster size between MPA and non-MPA sites?
