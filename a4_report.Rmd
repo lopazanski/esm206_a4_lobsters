@@ -51,10 +51,8 @@ lobster_counts <- lobster %>%
   mutate(site2 = ifelse(site == "NAPL", "Naples", 
                    ifelse(site == "MOHK", "Mohawk",
                    ifelse(site == "IVEE", "Isla Vista",
-                    ifelse(site == "CARP", "Carpinteria", "Arroyo Quemado")))))
-
-lobster_count_label <- lobster_counts %>%  
-  filter(year == 2018)
+                    ifelse(site == "CARP", "Carpinteria", "Arroyo Quemado"))))) %>% 
+  mutate(protection = ifelse(site %in% c("NAPL", "IVEE"), "Marine Protected Area", "Unprotected Area"))
 
 ```
 
@@ -62,27 +60,32 @@ lobster_count_label <- lobster_counts %>%
 ```{r abundance over time}
 # Visualize changes in annual lobster abundance at five sites over time
 ggplot(data = lobster_counts, aes(x = year, y = annual_abundance)) +
-  geom_line(aes(color = site2, label = site2)) +
-  geom_label_repel(data = lobster_count_label,
-             box.padding = 0.5,
-             nudge_x = 0.5,
-             min.segment.length = 5,
-             xlim = c(2012, 2020),
-             aes(label = site2, color = site2))+
+  geom_line(aes(color = site2, label = site2, linetype = protection)) +
+  geom_label_repel(data = lobster_count_label, 
+                   box.padding = 0.5, 
+                   size = 3,
+                   nudge_x = 0.5, 
+                   min.segment.length = 5, 
+                   show.legend = FALSE,
+                   xlim = c(2012, 2020), 
+                   aes(x = year,
+                       y = annual_abundance,
+                       label = site2, 
+                       color = site2))+
+  guides(color = "none") +
   labs(
-    title = "Annual lobster abundance after MPA creation",
-    subtitle = "subtitle?",
+    title = "Annual lobster abundance following marine protected area creation in 2012",
     x = "Year",
-    y = "Annual Lobster Abundance") +
-  theme_minimal() +
-  scale_x_continuous(limits = c(2012, 2018), expand = c(0, 0.5)) +
+    y = "Annual Lobster Abundance",
+    linetype = NULL) +
+  theme_classic() +
+  scale_x_continuous(limits = c(2012, 2019), expand = c(0, 0.5)) +
+  scale_y_continuous(limits = c(0, 1000), expand = c(0,0)) +
   theme(
     plot.title = element_text(hjust = 0.5,
-                              size = 16),
-    plot.subtitle = element_text(hjust = 0.5, 
-                                 size = 8,
-                                 face = "italic"),
-    legend.position = "none",
+                              size = 13),
+    legend.position = c(0.2, 0.8),
+    legend.background = element_rect(color = "white"),
     plot.caption = element_text(size = 6), 
     panel.grid.minor.x = element_blank(), 
     panel.grid.minor.y = element_blank())
