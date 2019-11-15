@@ -82,10 +82,8 @@ ggplot(data = lobster_counts, aes(x = year, y = annual_abundance)) +
                        color = site2))+
   guides(color = "none") +
   labs(
-    title = "Annual lobster abundance following marine protected area creation in 2012",
     x = "Year",
     y = "Annual Lobster Abundance",
-    caption = "Figure 1: Total annual abundance of CA spiny lobsters for 5 sites in the Santa Barbara Channel from 2012 to 2018. \nSolid lines indicate sites within marine protected areas (Isla Vista and Naples reefs) and dashed lines indicate sites \nin unprotected areas (Carpinteria, Mohawk, and Arroyo Quemado reefs).",
     linetype = NULL) +
   theme_classic() +
   scale_x_continuous(limits = c(2012, 2019), expand = c(0, 0.5)) +
@@ -98,9 +96,9 @@ ggplot(data = lobster_counts, aes(x = year, y = annual_abundance)) +
     panel.grid.minor.y = element_blank())
 
 ```
+***Figure 1.*** *Total annual abundance of CA spiny lobsters for 5 sites in the Santa Barbara Channel from 2012 to 2018. \nSolid lines indicate sites within marine protected areas (Isla Vista and Naples reefs) and dashed lines indicate sites \nin unprotected areas (Carpinteria, Mohawk, and Arroyo Quemado reefs).*
 
-
-#### Visualizing shifts in lobster size distributions from 2012 to 2018
+#### Shifts in lobster size distributions from 2012 to 2018
 
 ```{r, echo=FALSE}
 
@@ -124,11 +122,11 @@ ggplot(lobster_distributions, aes(x = size_mm, y = site2, fill = year))+
   theme(plot.caption = element_text(hjust = 0,vjust = 0))+
   labs(x = "Carapace length (mm)",
        y = "Site",
-       fill = NULL,
-       title = "CA Spiny Lobster size distributions in the Santa Barbara Channel",
-       caption = "Figure 2. Size distributions of the California Spiny Lobster at 5 sites in the Santa Barbara Channel\n(Naples and Isla Vista = within MPA; Mohawk, Arroyo Quemado, and Carpinteria = outside of MPA)\nin 2012 (red) and 2018 (blue). Sizes are measured as carapace length in mm.") 
+       fill = NULL) 
   
 ```
+***Figure 2.*** *Size distributions of the California Spiny Lobster at 5 sites in the Santa Barbara Channel (Naples and Isla Vista = within MPA; Mohawk, Arroyo Quemado, and Carpinteria = outside of MPA) in 2012 (red) and 2018 (blue). Sizes are measured as carapace length in mm.*
+
 Both the MPA sites, Naples and Isla Vista, show visible increases in lobster size distribution from 2012 to 2018 (Fig. 2). Size distributions of lobsters in the non-MPA sites (Mohawk reef, Carpinteria, and Arroyo Quemado) appear relatively similar in both 2012 and 2018; however, Carpinteria and Arroyo Quemado show a modest increase in overall abundance between the two years.
 
 
@@ -220,19 +218,19 @@ diff_non_mpa_d <- cohen.d(non_mpa_2012$size_mm, non_mpa_2018$size_mm)
 
 ```
 
+***Table 1.*** *California Spiny Lobster size statistics for monitoring efforts inside and outside of MPAs in the Santa Barbara Channel for 2012 and 2018.*
 ```{r}
 # Table for means, SD, and sample size of lobster sizes and abundances in 2012 and 2018
-table_data <- summary_calc %>% 
+table_data <- as.tibble(summary_calc) %>% 
   select(protection, mean, sd, n) %>% 
   mutate(protection = ifelse(protection == "mpa", "MPA", "Non-MPA"))
   
 lobster_table <- table_data %>% 
-  kable(col.names = c("Year", "Protection", "Mean Size (mm)", "Standard Deviation", "Sample Size")) %>% 
+  kable(col.names = c("Protection", "Mean Size (mm)", "Standard Deviation", "Sample Size")) %>% 
   kable_styling(bootstrap_options = NULL,
                 full_width = F) %>% 
   group_rows("2012", 1, 2) %>% 
   group_rows("2018", 3, 4) 
-  
 
 lobster_table
 ```
