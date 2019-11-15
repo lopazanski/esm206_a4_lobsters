@@ -16,7 +16,12 @@ With the aim of increasing abundances of kelp forest species that are targeted b
 ***
 ## DATA AND METHODS: 
 
-A brief ‘Data and Methods’ section (5 - 6 sentences) summarizing the data and how it was analyzed. Briefly describe the variables being studied in this report. Include the types of statistical tests performed, significance level used, and software (with version) for analysis.
+Data for California spiny lobster abundance and size were collected and provided by researchers with the Santa Barbara Coastal Long-Term Ecological Research Program (SBC LTER). Divers collected annual estimates from 2012-2018 at five long-term kelp forest sites. Two sites (Naples and Isla Vista) are located in designated MPAs, which were created on 2012-01-01. The other three sites (Mohawk Reef, Carpinteria, and Arroyo Quemado) are located in unprotected areas. Estimates were collected annually in late summer, before the start of the fishing season, by counting lobsters and visually estimating the carapace length (mm) for each across a 40-meter transect at the five sites. For more info on the site and collection methods, see metadata. 
+
+Changes in annual lobster abundance over time were examined for each site by comparing the total lobster count for each year from 2012-2018. Size distributions were examined by comparing the size composition (mm) of the lobsters measured at each site in 2012 and in 2018. Mean lobster size was compared for lobsters measured in MPAs versus unprotected waters in 2012 and in 2018 using two-sample t-tests (alpha = 0.5 throughout). 
+
+All data preparation and analyses were completed using R software () and RStudio (version 1.2.5001)
+
 
 ***
 ## RESULTS: 
