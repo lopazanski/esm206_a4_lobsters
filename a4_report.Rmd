@@ -8,15 +8,17 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, error = FALSE)
 ```
-
+***
 ## INTRODUCTION: 
 
 A short (7 - 8 sentence) introduction that helps the reader understand the purpose/motivation of the research, and previews the content of the report. 
 
+***
 ## DATA AND METHODS: 
 
 A brief ‘Data and Methods’ section (5 - 6 sentences) summarizing the data and how it was analyzed. Briefly describe the variables being studied in this report. Include the types of statistical tests performed, significance level used, and software (with version) for analysis.
 
+***
 ## RESULTS: 
 
 Prepare finalized data visualizations and perform statistical analyses (as indicated) to do the following. You are expected to also add useful text that weaves the pieces together into a cohesive Results section (i.e., this should not just be a series of figures and without useful description & text flow between them). 
@@ -27,12 +29,13 @@ Visually explore changes in annual lobster abundance (counts) by site. After gro
 
 In text (above or below the graph for Results A), describe general / interesting trends that you observe for lobster abundance at the 5 sites. 
 
-```{r, include=FALSE, message=FALSE}
+```{r packages and data wrangling}
 # Attach packages and read in the data
 library(tidyverse)
 library(janitor) 
 library(gghighlight)
 library(ggridges)
+library(effsize)
 
 lobster <- read_csv("lobster_abundance_sbc_lter.csv", na = c("-99999")) %>% 
   clean_names()
@@ -44,6 +47,10 @@ lobster_counts <- lobster %>%
     annual_abundance = sum(count)
   )
 
+```
+
+
+```{r abundance over time}
 # Visualize changes in annual lobster abundance at five sites over time
 ggplot(data = lobster_counts, aes(x = year, y = annual_abundance)) +
   geom_line(aes(color = site)) +
@@ -65,7 +72,6 @@ ggplot(data = lobster_counts, aes(x = year, y = annual_abundance)) +
     panel.grid.minor.x = element_blank(), 
     panel.grid.minor.y = element_blank())
 
-
 ```
 
 
@@ -85,6 +91,8 @@ lobster_distributions <- lobster %>%
 ggplot(lobster_distributions, aes(x = size_mm, y = site))+
   geom_density_ridges()+
   facet_wrap(~year)
+
+
 ```
 
 
@@ -104,10 +112,102 @@ A finalized table (interactive or static) that includes means, standard deviatio
 
 In text in your report, describe the outcome of the statistical hypothesis tests using in-line referencing (e.g. do not copy and paste values from the output). Remember: the p-value is not enough. You should also describe more meaningful metrics for comparison. Here are some things you might consider including in your description: the actual differences in mean size between groups, % changes, measure of uncertainty (e.g. confidence interval), etc.
 
+```{r part c mean size comparison}
+# Create column in distribution frame designating mpa/non_mpa protected status
+mpa_comparison <- lobster_distributions %>% 
+  mutate(protection = if_else(site %in% c("IVEE", "NAPL"), "mpa", "non_mpa"))
+
+# Subset distribution data for year and status
+mpa_2012 <- mpa_comparison %>% 
+  filter(year == "2012" & protection == "mpa")
+
+non_mpa_2012 <- mpa_comparison %>% 
+  filter(year == "2012" & protection == "non_mpa")
+
+mpa_2018 <- mpa_comparison %>% 
+  filter(year == "2018" & protection == "mpa")
+
+non_mpa_2018 <- mpa_comparison %>% 
+  filter(year == "2018" & protection == "non_mpa")
+
+# Summary table of mean, sd, sample size for later quick reference
+summary_calc <- mpa_comparison %>% 
+  group_by(year, protection) %>% 
+  summarize(
+    mean = mean(size_mm),
+    sd = sd(size_mm),
+    n = length(size_mm)
+  )
+
+# Mean, SD, Sample size for in-line referencing
+mean_mpa_2012 <- mean(mpa_2012$size_mm)
+mean_mpa_2018 <- mean(mpa_2018$size_mm)
+mean_non_mpa_2012 <- mean(non_mpa_2012$size_mm)
+mean_non_mpa_2018 <- mean(non_mpa_2018$size_mm)
+
+sd_mpa_2012 <- sd(mpa_2012$size_mm)
+sd_mpa_2018 <- sd(mpa_2018$size_mm)
+sd_non_mpa_2012 <- sd(non_mpa_2012$size_mm)
+sd_non_mpa_2018 <- sd(non_mpa_2018$size_mm)
+
+n_mpa_2012 <- length(mpa_2012$size_mm)
+n_mpa_2018 <- length(mpa_2018$size_mm)
+n_non_mpa_2012 <- length(non_mpa_2012$size_mm)
+n_non_mpa_2018 <- length(non_mpa_2018$size_mm)
+
+
+# Look at the data even though we just looked at it cause allison says so and I guess its good practice
+ggplot(data = mpa_comparison, aes(x = size_mm)) +
+  geom_histogram() +
+  facet_wrap(~year + ~protection)
+
+ggplot(data = mpa_comparison, aes(sample = size_mm)) +
+  geom_qq() +
+  facet_wrap(~year + ~protection)
+
+# Might not be normally distributed but CLT ... sample sizes large enough that means will be normally distributed so ok to do parametric test
+
+# For 2012 observations, is there a significant difference in lobster size between MPA and non-MPA sites?
+diff_2012_t <- t.test(mpa_2012$size_mm, non_mpa_2012$size_mm)
+diff_2012_d <- cohen.d(mpa_2012$size_mm, non_mpa_2012$size_mm)
+
+# For 2018 observations, is there a significant difference in lobster size between MPA and non-MPA sites?
+diff_2018_t <- t.test(mpa_2018$size_mm, non_mpa_2018$size_mm)
+diff_2018_d <- cohen.d(mpa_2018$size_mm, non_mpa_2018$size_mm)
+
+# For MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
+diff_mpa_t <- t.test(mpa_2012$size_mm, mpa_2018$size_mm)
+diff_mpa_d <- cohen.d(mpa_2012$size_mm, mpa_2018$size_mm)
+
+# For non-MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
+diff_non_mpa_t <- t.test(non_mpa_2012$size_mm, non_mpa_2018$size_mm)
+diff_non_mpa_d <- cohen.d(non_mpa_2012$size_mm, non_mpa_2018$size_mm)
+
+```
+Answers to questions with in-line referencing:
+
+- For 2012 observations, is there a significant difference in lobster size between MPA and non-MPA sites?
+
+In 2012, mean lobster size (mm) measured in designated marine protected areas (`r round(mean_mpa_2012, 2)` $\pm$ `r round(sd_mpa_2012, 2)`, n = `r n_mpa_2012`) differed significantly from lobsters measured in unprotected waters (`r round(mean_non_mpa_2012, 2)` $\pm$ `r round(sd_non_mpa_2012, 2)`, n = `r n_non_mpa_2012`) by a two-sample t-test (t(`r round(diff_2012_t$parameter, 2)`) = `r round(diff_2012_t$statistic, 2)`, *p* = `r round(diff_2012_t$p.value, 3)`).
+  
+- For 2018 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
+
+In 2018, mean lobster size (mm) measured in designated marine protected areas (`r round(mean_mpa_2018, 2)` $\pm$ `r round(sd_mpa_2018, 2)`, n = `r n_mpa_2018`) differed significantly from lobsters measured in unprotected waters (`r round(mean_non_mpa_2018, 2)` $\pm$ `r round(sd_non_mpa_2018, 2)`, n = `r n_non_mpa_2018`) by a two-sample t-test (t(`r round(diff_2018_t$parameter, 2)`) = `r round(diff_2018_t$statistic, 2)`, *p* < 0.001).
+
+- For MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
+
+For lobsters measured in marine protected areas, mean size in 2012 (`r round(mean_mpa_2012, 2)` $\pm$ `r round(sd_mpa_2012, 2)`, n = `r n_mpa_2012`) differed significantly from mean size in 2018 (`r round(mean_mpa_2018, 2)` $\pm$ `r round(sd_mpa_2018, 2)`, n = `r n_mpa_2018`) by a two-sample t-test (t(`r round(diff_mpa_t$parameter, 2)`) = `r round(diff_mpa_t$statistic, 2)`, *p* < 0.001).
+
+- For non-MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
+
+For lobsters measured outside of marine protected areas, mean size in 2012 (`r round(mean_non_mpa_2012, 2)` $\pm$ `r round(sd_non_mpa_2012, 2)`, n = `r n_non_mpa_2012`) did not differ significantly from mean size in 2018 (`r round(mean_non_mpa_2018, 2)` $\pm$ `r round(sd_non_mpa_2018, 2)`, n = `r n_non_mpa_2018`) by a two-sample t-test (t(`r round(diff_non_mpa_t$parameter, 2)`) = `r round(diff_non_mpa_t$statistic, 2)`, *p* = `r round(diff_non_mpa_t$p.value, 2)`). 
+
+***
 ## SUMMARY: 
 
 A brief summary of the major findings (pick 3 - 4) from your mini-report. A bullet-pointed list is fine, but the findings should be well-written, responsible (don’t overstate your findings), and refer to outcomes (e.g. figures, tables) in the Results section
 
+***
 ## REFERENCES: 
 
 References (including for data sources & literature cited in your introduction) that were used to prepare the report. Reference formatting matters - 
