@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, error = FALSE)
 ```
 
 ## INTRODUCTION: 
@@ -21,7 +21,7 @@ A brief ‘Data and Methods’ section (5 - 6 sentences) summarizing the data an
 
 Prepare finalized data visualizations and perform statistical analyses (as indicated) to do the following. You are expected to also add useful text that weaves the pieces together into a cohesive Results section (i.e., this should not just be a series of figures and without useful description & text flow between them). 
 
-### Results A: 
+### Results A: Trends for lobster abundance at various sites
 
 Visually explore changes in annual lobster abundance (counts) by site. After grouping observations to find lobster counts for each year, create a finalized data visualization (no modeling/stats needed) showing changes in annual lobster abundance at the five sites over time. You should decide how to best present the data. Make your data visualization correct, clear, responsible, and professional. Details matter (e.g. is it easier to read a legend or label lines directly? How can I designate between MPA and non-MPA sites? And many more decisions!). Add a figure caption below the graph.
 
@@ -31,6 +31,7 @@ In text (above or below the graph for Results A), describe general / interesting
 # Attach packages and read in the data
 library(tidyverse)
 library(janitor) # for clean_names()
+library(gghighlight)
 
 lobster <- read_csv("lobster_abundance_sbc_lter.csv", na = c("-99999")) %>% 
   clean_names()
@@ -42,10 +43,28 @@ lobster_counts <- lobster %>%
     annual_abundance = sum(count)
   )
 
-
 # Visualize changes in annual lobster abundance at five sites over time
 ggplot(data = lobster_counts, aes(x = year, y = annual_abundance)) +
-  geom_point(aes(color = site))
+  geom_line(aes(color = site)) +
+  scale_color_manual(values = c("red", "green", "blue", "yellow", "orange")) +
+  theme_minimal() +
+  gghighlight(site %in% c("IVEE", "NAPL")) + 
+  labs(
+    title = "Annual lobster abundance after MPA creation",
+    subtitle = "subtitle?",
+    x = "Year",
+    y = "Annual Lobster Abundance"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5,
+                              size = 16),
+    plot.subtitle = element_text(hjust = 0.5, 
+                                 size = 8,
+                                 face = "italic"),
+    plot.caption = element_text(size = 6), 
+    panel.grid.minor.x = element_blank(), 
+    panel.grid.minor.y = element_blank())
+
 
 ```
 
