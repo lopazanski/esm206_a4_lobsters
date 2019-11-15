@@ -27,11 +27,12 @@ Visually explore changes in annual lobster abundance (counts) by site. After gro
 
 In text (above or below the graph for Results A), describe general / interesting trends that you observe for lobster abundance at the 5 sites. 
 
-```{r}
+```{r, include=FALSE, message=FALSE}
 # Attach packages and read in the data
 library(tidyverse)
-library(janitor) # for clean_names()
+library(janitor) 
 library(gghighlight)
+library(ggridges)
 
 lobster <- read_csv("lobster_abundance_sbc_lter.csv", na = c("-99999")) %>% 
   clean_names()
@@ -46,7 +47,6 @@ lobster_counts <- lobster %>%
 # Visualize changes in annual lobster abundance at five sites over time
 ggplot(data = lobster_counts, aes(x = year, y = annual_abundance)) +
   geom_line(aes(color = site)) +
-  scale_color_manual(values = c("red", "green", "blue", "yellow", "orange")) +
   theme_minimal() +
   gghighlight(site %in% c("IVEE", "NAPL")) + 
   labs(
@@ -74,6 +74,19 @@ ggplot(data = lobster_counts, aes(x = year, y = annual_abundance)) +
 Visually explore lobster size distribution shifts by comparing lobster sizes in 2012 and 2018. Visually explore the size distributions for lobsters observed at the 5 different sites in 2012, and in 2018 (i.e. you will have a total of 10 size distributions shown: for each of the 5 sites, one for 2012 and one for 2018). Make a finalized graph that clearly and professionally shows community size distributions at each site in the 2 years, allowing the reader to easily interpret distribution shifts. Add a figure caption below the graph. 
 
 In text, describe general / interesting trends that you see in community size structure at different sites (again, considering MPA vs. non-MPA status) for lobsters between 2012 and 2018. 
+
+```{r}
+
+lobster_distributions <- lobster %>% 
+  uncount(count) %>% 
+  select(year, site, size_mm) %>% 
+  filter(year == "2012" | year == "2018")
+
+ggplot(lobster_distributions, aes(x = size_mm, y = site))+
+  geom_density_ridges()+
+  facet_wrap(~year)
+```
+
 
 
 ### Results C. 
