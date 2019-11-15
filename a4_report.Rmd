@@ -1,6 +1,6 @@
 ---
 title: "A4 Report"
-author: "Cori Lopazanski"
+author: "Cori Lopazanski, Kai Kopecky"
 date: "11/14/2019"
 output: html_document
 ---
@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, error = FA
 ***
 ## INTRODUCTION: 
 
-A short (7 - 8 sentence) introduction that helps the reader understand the purpose/motivation of the research, and previews the content of the report. 
+The California Spiny Lobster (*Panilurus interruptus*) serves as an important predator in kelp forest ecosystems by regulating sea urchin populations. If left unchecked, sea urchins can reach abundances high enough to decimate kelp populations and induce unfavorable ecosystem shifts from kelp forests to urchin barrens. Concern has been raised over whether increased fishing pressure on the California Spiny Lobster in the Santa Barbara Channel has weakened this predator's regulatory role in culling urchin populations, thus placing kelp forests at greater risk of undergoing phase shifts to urchin barrens. With the aim of increasing numbers of kelp forest species targeted by fisheries, several Marine Protected Areas (MPAs) have been established along the California coast to limit or prohibit fishing in areas deemed as important habitat. Monitoring efforts have been implemented to assess the effectiveness of these MPAs by comparing abundances of species inside and outside of the protected areas. One such effort is undertaken by the Santa Barbara Coastal Long Term Ecological Research (SBC LTER) program, which conducts yearly monitoring in the Santa Barbara Channel at 2 sites within MPAs (Naples and Isla Vista), and 3 sites outside of MPAs (Mohawk Reef, Carpinteria, and Arroyo Quemado). 
 
 ***
 ## DATA AND METHODS: 
@@ -36,6 +36,7 @@ library(janitor)
 library(gghighlight)
 library(ggridges)
 library(effsize)
+library(ggjoy)
 
 lobster <- read_csv("lobster_abundance_sbc_lter.csv", na = c("-99999")) %>% 
   clean_names()
@@ -85,16 +86,28 @@ In text, describe general / interesting trends that you see in community size st
 
 lobster_distributions <- lobster %>% 
   uncount(count) %>% 
-  select(year, site, size_mm) %>% 
-  filter(year == "2012" | year == "2018")
+  mutate(Year = as.factor(year)) %>% 
+  select(Year, site, size_mm) %>% 
+  filter(Year == "2012" | Year == "2018") %>% 
+  mutate(site2 = ifelse(site == "NAPL", "Naples", 
+                   ifelse(site == "MOHK", "Mohawk",
+                   ifelse(site == "IVEE", "Isla Vista",
+                    ifelse(site == "CARP", "Carpinteria", "Arroyo Quemado")))))
+ 
+  
 
-ggplot(lobster_distributions, aes(x = size_mm, y = site))+
-  geom_density_ridges()+
-  facet_wrap(~year)
+ggplot(lobster_distributions, aes(x = size_mm, y = site2, fill = Year))+
+  geom_joy(data = filter(lobster_distributions, Year == "2012"), alpha = 0.4, scale = 0.9)+
+  geom_joy(data = filter(lobster_distributions, Year == "2018"), alpha = 0.4, scale = 0.9)+
+  theme_joy()+
+  theme_minimal()+
+  labs(x = "Size (mm)",
+       y = "Site")
+  
 
 
 ```
-
+Both the MPA sites, Naples and Isla Vista, show visible increases in lobster size distribution from 2012 to 2018. Size distributions of lobsters in the non-MPA sites (Mohawk reef, Carpinteria, and Arroyo Quemado) appear relatively similar in both 2012 and 2018.
 
 
 ### Results C. 
