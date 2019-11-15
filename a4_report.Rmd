@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, error = FA
 ***
 ## INTRODUCTION: 
 
-The California Spiny Lobster (*Panilurus interruptus*) serves as an important predator in kelp forest ecosystems by regulating sea urchin populations. If left unchecked, sea urchins can reach abundances high enough to decimate kelp populations and induce unfavorable ecosystem shifts from kelp forests to urchin barrens. Concern has been raised over whether increased fishing pressure on the California Spiny Lobster in the Santa Barbara Channel has weakened this predator's regulatory role in culling urchin populations, thus placing kelp forests at greater risk of undergoing phase shifts to urchin barrens. With the aim of increasing numbers of kelp forest species targeted by fisheries, several Marine Protected Areas (MPAs) have been established along the California coast to limit or prohibit fishing in areas deemed as important habitat. Monitoring efforts have been implemented to assess the effectiveness of these MPAs by comparing abundances of species inside and outside of the protected areas. One such effort is undertaken by the Santa Barbara Coastal Long Term Ecological Research (SBC LTER) program, which conducts yearly monitoring in the Santa Barbara Channel at 2 sites within MPAs (Naples and Isla Vista), and 3 sites outside of MPAs (Mohawk Reef, Carpinteria, and Arroyo Quemado). 
+With the aim of increasing abundances of kelp forest species that are targeted by fisheries,  Marine Protected Areas (MPAs) have been established along the California coast to limit or prohibit fishing in areas deemed as important habitat for these species (cite). Monitoring efforts have been implemented to assess the effectiveness of these MPAs by comparing abundances of species inside and outside of the protected areas (cite). One such effort, undertaken by the Santa Barbara Coastal Long Term Ecological Research (SBC LTER) program, conducts yearly monitoring of kelp forest species in the Santa Barbara Channel inside and outside of MPAs. Within the Santa Barbara Channel, the California Spiny Lobster (*Panilurus interruptus*) is a species of interest, as it provides a lucrative fishery but also serves an important role in maintaining kelp forest ecosystems through predation of sea urchins (Tegner & Levin, 1983). Without predatory regulation, sea urchins can reach abundances high enough to decimate kelp populations and induce unfavorable ecosystem shifts from kelp forests to urchin barrens. Concern has been raised over whether increased fishing pressure on the *P. interruptus* in the Santa Barbara Channel has weakened this predator's regulatory role in culling urchin populations, and thus placed kelp forests at greater risk of undergoing phase shifts to urchin barrens. Here, we explore the effects of protection on *P. interruptus*  in the Santa Barbara Channel by comparing populations inside and outside of MPAs from 2012-2018.
 
 ***
 ## DATA AND METHODS: 
@@ -96,7 +96,7 @@ ggplot(data = lobster_counts, aes(x = year, y = annual_abundance)) +
 #### Shifts in lobster size distributions from 2012 to 2018
 
 ```{r, echo=FALSE}
-
+# Convert lobster dataframe to tidy format subset for observations from 2012 and 2018 only
 lobster_distributions <- lobster %>% 
   uncount(count) %>% 
   mutate(year = as.factor(year)) %>% 
@@ -107,8 +107,10 @@ lobster_distributions <- lobster %>%
                    ifelse(site == "IVEE", "Isla Vista",
                     ifelse(site == "CARP", "Carpinteria", "Arroyo Quemado")))))
 
+# Order factors so that MPA sites are together and at the top of the following plot
 lobster_distributions$site2 <- ordered(lobster_distributions$site2, levels = c("Carpinteria", "Arroyo Quemado", "Mohawk", "Isla Vista", "Naples"))
 
+# Ridge plot comparing lobster size distrubutions at the 5 sites in 2012 and 2018
 ggplot(lobster_distributions, aes(x = size_mm, y = site2, fill = year))+
   geom_joy(data = filter(lobster_distributions, year == "2012"), alpha = 0.4, scale = 0.9)+
   geom_joy(data = filter(lobster_distributions, year == "2018"), alpha = 0.4, scale = 0.9)+
@@ -256,6 +258,5 @@ A brief summary of the major findings (pick 3 - 4) from your mini-report. A bull
 
 ***
 ## REFERENCES: 
-
-References (including for data sources & literature cited in your introduction) that were used to prepare the report. Reference formatting matters - 
+1. Tegner, M. J., and L. A. Levin. "Spiny lobsters and sea urchins: analysis of a predator-prey interaction." Journal of Experimental Marine Biology and Ecology 73.2 (1983): 125-150.
 
