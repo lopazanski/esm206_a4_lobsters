@@ -1,5 +1,5 @@
 ---
-title: "A4 Report"
+title: "A4 Report - Insert Witty and Accurate Title Here"
 author: "Cori Lopazanski, Kai Kopecky"
 date: "11/14/2019"
 output: html_document
@@ -9,12 +9,12 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, error = FALSE)
 ```
 ***
-## INTRODUCTION: 
+### INTRODUCTION 
 
 With the aim of increasing abundances of kelp forest species that are targeted by fisheries,  Marine Protected Areas (MPAs) have been established along the California coast to limit or prohibit fishing in areas deemed as important habitat for these species (cite). Monitoring efforts have been implemented to assess the effectiveness of these MPAs by comparing abundances of species inside and outside of the protected areas (cite). One such effort, undertaken by the Santa Barbara Coastal Long Term Ecological Research (SBC LTER) program, conducts yearly monitoring of kelp forest species in the Santa Barbara Channel inside and outside of MPAs. Within the Santa Barbara Channel, the California Spiny Lobster (*Panilurus interruptus*) is a species of interest, as it provides a lucrative fishery but also serves an important role in maintaining kelp forest ecosystems through predation of sea urchins (Tegner & Levin, 1983). Without predatory regulation, sea urchins can reach abundances high enough to decimate kelp populations and induce unfavorable ecosystem shifts from kelp forests to urchin barrens. Concern has been raised over whether increased fishing pressure on the *P. interruptus* in the Santa Barbara Channel has weakened this predator's regulatory role in culling urchin populations, and thus placed kelp forests at greater risk of undergoing phase shifts to urchin barrens. Here, we explore the effects of protection on *P. interruptus*  in the Santa Barbara Channel by comparing populations inside and outside of MPAs from 2012-2018.
 
 ***
-## DATA AND METHODS: 
+### DATA AND METHODS 
 
 Data for California spiny lobster abundance and size were collected and provided by researchers with the Santa Barbara Coastal Long-Term Ecological Research Program (SBC LTER). Divers collected annual estimates from 2012-2018 at five long-term kelp forest sites. Two sites (Naples and Isla Vista) are located in designated MPAs, which were created on 2012-01-01. The other three sites (Mohawk Reef, Carpinteria, and Arroyo Quemado) are located in unprotected areas. Estimates were collected annually in late summer, before the start of the fishing season, by counting lobsters and visually estimating the carapace length (mm) for each across a 40-meter transect at the five sites. For more info on the site and collection methods, see metadata. 
 
@@ -24,9 +24,7 @@ All data preparation and analyses were completed using R software () and RStudio
 
 
 ***
-## RESULTS: 
-
-Prepare finalized data visualizations and perform statistical analyses (as indicated) to do the following. You are expected to also add useful text that weaves the pieces together into a cohesive Results section (i.e., this should not just be a series of figures and without useful description & text flow between them). 
+### RESULTS 
 
 ```{r packages and data wrangling}
 # Attach packages and read in the data
@@ -59,11 +57,7 @@ lobster_count_label <- lobster_counts %>%
 
 ```
 
-#### Trends for lobster abundance at various sites
-
-Visually explore changes in annual lobster abundance (counts) by site. After grouping observations to find lobster counts for each year, create a finalized data visualization (no modeling/stats needed) showing changes in annual lobster abundance at the five sites over time. You should decide how to best present the data. Make your data visualization correct, clear, responsible, and professional. Details matter (e.g. is it easier to read a legend or label lines directly? How can I designate between MPA and non-MPA sites? And many more decisions!). Add a figure caption below the graph.
-
-In text (above or below the graph for Results A), describe general / interesting trends that you observe for lobster abundance at the 5 sites. 
+#### Trends in annual lobster abundance following MPA creation in 2012
 
 ```{r abundance over time}
 # Visualize changes in annual lobster abundance at five sites over time
@@ -96,7 +90,26 @@ ggplot(data = lobster_counts, aes(x = year, y = annual_abundance)) +
     panel.grid.minor.y = element_blank())
 
 ```
-***Figure 1.*** *Total annual abundance of CA spiny lobsters for 5 sites in the Santa Barbara Channel from 2012 to 2018. \nSolid lines indicate sites within marine protected areas (Isla Vista and Naples reefs) and dashed lines indicate sites \nin unprotected areas (Carpinteria, Mohawk, and Arroyo Quemado reefs).*
+
+***Figure 1.*** *Total annual abundance of CA spiny lobsters for 5 sites in the Santa Barbara Channel from 2012 to 2018. Solid lines indicate sites within marine protected areas (Isla Vista and Naples reefs) and dashed lines indicate sites in unprotected areas (Carpinteria, Mohawk, and Arroyo Quemado reefs).*
+
+```{r percent increase calculations}
+percent_increase <- lobster_counts %>% 
+  filter(year %in% c("2012", "2018")) %>% 
+  arrange(site) %>% 
+  group_by(site) %>% 
+  mutate(
+    pct_change = (annual_abundance/lag(annual_abundance) -1)*100
+  ) %>% 
+  select(site, pct_change) %>% 
+  filter(!is.na(pct_change))
+  
+```
+
+
+All sites have similar annual lobster abundance in 2012 and show an overall increase by 2018 (Fig. 1), but the two sites in Marine Protected Areas (Isla Vista and Naples) show a much greater increasethan the sites in unprotected areas (Arroyo Quemado, Carpinteria, and Mohawk). From 2012 to 2018, annual lobster abundance at the Isla Vista site increased by 3538%, and Naples increased by 4866%. Percent increases in annual abundance were much smaller at the unprotected sites: though Carpinteria showed a drastic increase from 2015-2017, the overall increase in annual abundance was an order of magnitude smaller than the MPA sites (339%), and the other unprotected sites had even smaller changes at 42% and 98% (Arroyo Quemado and Mohawk, respectively). 
+
+
 
 #### Shifts in lobster size distributions from 2012 to 2018
 
@@ -127,27 +140,17 @@ ggplot(lobster_distributions, aes(x = size_mm, y = site2, fill = year))+
        fill = NULL) 
   
 ```
+
 ***Figure 2.*** *Size distributions of the California Spiny Lobster at 5 sites in the Santa Barbara Channel (Naples and Isla Vista = within MPA; Mohawk, Arroyo Quemado, and Carpinteria = outside of MPA) in 2012 (red) and 2018 (blue). Sizes are measured as carapace length in mm.*
 
 Both the MPA sites, Naples and Isla Vista, show visible increases in lobster size distribution from 2012 to 2018 (Fig. 2). Size distributions of lobsters in the non-MPA sites (Mohawk reef, Carpinteria, and Arroyo Quemado) appear relatively similar in both 2012 and 2018; however, Carpinteria and Arroyo Quemado show a modest increase in overall abundance between the two years.
 
 
-### Results C. 
+### Statistical comparisons for CA spiny lobster monitoring efforts
 
-Compare mean lobster sizes at MPA vs. non-MPA sites in 2012 and 2018. Here, for each year (2012 and 2018) consolidate the size observations into only two groups: MPA and non-MPA lobsters. Then answer the following four questions: 
+In text in your report, describe the outcome of the statistical hypothesis tests using in-line referencing (e.g. do not copy and paste values from the output). Remember: the p-value is not enough. You should also describe **more meaningful metrics for comparison**. Here are some things you might consider including in your description: the actual differences in mean size between groups, % changes, measure of uncertainty (e.g. confidence interval), etc.
 
-For 2012 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
-For 2018 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
-For MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
-For non-MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
-
-In your report for Results C, you should at least include:
-
-A finalized table (interactive or static) that includes means, standard deviations, and sample sizes for the two groups (MPA and non-MPA sites) in 2012 and 2018. Add a caption (remember: table captions are above tables).
-
-In text in your report, describe the outcome of the statistical hypothesis tests using in-line referencing (e.g. do not copy and paste values from the output). Remember: the p-value is not enough. You should also describe more meaningful metrics for comparison. Here are some things you might consider including in your description: the actual differences in mean size between groups, % changes, measure of uncertainty (e.g. confidence interval), etc.
-
-```{r part c mean size comparison}
+```{r part c mean size comparison, include=FALSE}
 # Create column in distribution frame designating mpa/non_mpa protected status
 mpa_comparison <- lobster_distributions %>% 
   mutate(protection = if_else(site %in% c("IVEE", "NAPL"), "mpa", "non_mpa"))
@@ -238,7 +241,7 @@ lobster_table
 ```
 
 
-Answers to questions with in-line referencing:
+Answers to questions with in-line referencing: **this should probably be converted to paragraph form with more detailed info mixed in, or we should include other info separately....**
 
 - For 2012 observations, is there a significant difference in lobster size between MPA and non-MPA sites?
 
@@ -257,11 +260,11 @@ For lobsters measured in marine protected areas, mean size in 2012 (`r round(mea
 For lobsters measured outside of marine protected areas, mean size in 2012 (`r round(mean_non_mpa_2012, 2)` $\pm$ `r round(sd_non_mpa_2012, 2)`, n = `r n_non_mpa_2012`) did not differ significantly from mean size in 2018 (`r round(mean_non_mpa_2018, 2)` $\pm$ `r round(sd_non_mpa_2018, 2)`, n = `r n_non_mpa_2018`) by a two-sample t-test (t(`r round(diff_non_mpa_t$parameter, 2)`) = `r round(diff_non_mpa_t$statistic, 2)`, *p* = `r round(diff_non_mpa_t$p.value, 2)`). 
 
 ***
-## SUMMARY: 
+## SUMMARY 
 
 A brief summary of the major findings (pick 3 - 4) from your mini-report. A bullet-pointed list is fine, but the findings should be well-written, responsible (don’t overstate your findings), and refer to outcomes (e.g. figures, tables) in the Results section
 
 ***
-## REFERENCES: 
+## REFERENCES 
 1. Tegner, M. J., and L. A. Levin. "Spiny lobsters and sea urchins: analysis of a predator-prey interaction." Journal of Experimental Marine Biology and Ecology 73.2 (1983): 125-150.
 
