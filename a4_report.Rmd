@@ -15,14 +15,14 @@ knitr::opts_chunk$set(echo = FALSE, #exclude code from knitted document
 ***
 ### Introduction
 
-With the aim of increasing abundances of kelp forest species that are targeted by fisheries,  Marine Protected Areas (MPAs) have been established along the California coast to limit or prohibit fishing in areas deemed as important habitat for these species (cite). Monitoring efforts have been implemented to assess the effectiveness of these MPAs by comparing abundances of species inside and outside of the protected areas (cite). One such effort, undertaken by the Santa Barbara Coastal Long Term Ecological Research (SBC LTER) program, conducts yearly monitoring of kelp forest species in the Santa Barbara Channel inside and outside of MPAs. Within the Santa Barbara Channel, the California Spiny Lobster (*Panilurus interruptus*) is a species of interest, as it provides a lucrative fishery but also serves an important role in maintaining kelp forest ecosystems through predation of sea urchins (Tegner & Levin, 1983). Without predatory regulation, sea urchins can reach abundances high enough to decimate kelp populations and induce unfavorable ecosystem shifts from kelp forests to urchin barrens. Concern has been raised over whether increased fishing pressure on the *P. interruptus* in the Santa Barbara Channel has weakened this predator's regulatory role in culling urchin populations, and thus placed kelp forests at greater risk of undergoing phase shifts to urchin barrens. Here, we explore the effects of protection on *P. interruptus*  in the Santa Barbara Channel by comparing populations inside and outside of MPAs from 2012-2018.
+Marine Protected Areas (MPAs) have been established along the California coast to protect coastal species and their habitat through regulation of fishing and other potentially harmful human activities^1^. Monitoring efforts have been implemented to assess the effectiveness of these MPAs by comparing population characteristics of species inside and outside of the protected areas^2^. One such effort, undertaken by the Santa Barbara Coastal Long Term Ecological Research (SBC LTER) program, conducts yearly monitoring of kelp forest species in the Santa Barbara Channel inside and outside of MPAs. Within the Santa Barbara Channel, the California Spiny Lobster (*Panulirus interruptus*) is currently a species of interest, as it provides a lucrative fishery but also serves an important role in maintaining kelp forest ecosystems through predation of sea urchins^3^. Without predatory regulation, sea urchins can reach abundances high enough to decimate kelp populations and induce unfavorable ecosystem shifts from kelp forests to urchin barrens^4^. Excessive fishing of other species of lobster has been implicated in causing subsequent overgrazing of macroalgal communities by sea urchins^5,^ ^6^. Here, we assess impacts of fishing pressure on population characteristics of the California Spiny lobster from 2012-2018.
 
 ![***Figure 1:*** California Spiny Lobster, *Panilurus interruptus*. Photographer: Joel Sartore, National Geographic Photographer ([source](https://www.joelsartore.com/inv002-00049/))](lobster.jpg)
 
 ***
 ### Data and methods 
 
-Data for California spiny lobster abundance and size were collected and provided by researchers with the Santa Barbara Coastal Long-Term Ecological Research Program (SBC LTER). Divers collected annual estimates from 2012-2018 at five long-term kelp forest sites. Two sites (Naples and Isla Vista) are located in designated MPAs, which were created on 2012-01-01. The other three sites (Mohawk Reef, Carpinteria, and Arroyo Quemado) are located in unprotected areas. Estimates were collected annually in late summer, before the start of the fishing season, by counting lobsters to quantify abundance and visually estimating the carapace length (mm) for size information across a 40-meter transect at the five sites. 
+Data for California spiny lobster abundance and size were collected and provided by researchers with the Santa Barbara Coastal Long-Term Ecological Research Program (SBC LTER)^7^. Divers collected annual estimates from 2012-2018 at five long-term kelp forest sites. Two sites (Naples and Isla Vista) are located in designated MPAs, which were created on 2012-01-01. The other three sites (Mohawk Reef, Carpinteria, and Arroyo Quemado) are located in unprotected areas. Estimates were collected annually in late summer, before the start of the fishing season, by counting lobsters to quantify abundance and visually estimating the carapace length (mm) for size information across a 40-meter transect at the five sites. 
 
 Changes in annual lobster abundance over time were examined for each site by comparing the total lobster count for each year from 2012-2018. Size distributions were examined by comparing the size composition (mm) of the lobsters measured at each site in 2012 and in 2018. Mean lobster size was compared for lobsters measured in MPAs versus unprotected waters in 2012 and in 2018 using two-sample t-tests ($\alpha$ = 0.5 throughout). For more information on site and data collection methods, see [metadata](https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-sbc.77.3).
 
@@ -159,7 +159,9 @@ ggplot(lobster_distributions, aes(x = size_mm, y = site2, fill = year))+
 
 ***Figure 3.*** *Size distributions of the California Spiny Lobster at 5 sites in the Santa Barbara Channel (Naples and Isla Vista = within MPA; Mohawk, Arroyo Quemado, and Carpinteria = outside of MPA) in 2012 (red) and 2018 (blue). Sizes are measured as carapace length in mm.*
 
-Both the MPA sites, Naples and Isla Vista, show increases in lobster size distribution from 2012 to 2018 (Fig. 3). Size distributions of lobsters in the non-MPA sites (Mohawk reef, Carpinteria, and Arroyo Quemado) appear relatively similar in both 2012 and 2018.
+
+Both sites within MPAs (Naples and Isla Vista) showed increases in lobster size distribution from 2012 to 2018 (Fig. 3). Size distributions of lobsters in the non-MPA sites (Mohawk reef, Carpinteria, and Arroyo Quemado) appear relatively similar in both 2012 and 2018.
+
 
 #### Statistical comparisons for CA spiny lobster monitoring efforts
 
@@ -247,12 +249,12 @@ perc_change_nonmpa <- mean_non_mpa_2018/mean_non_mpa_2012 # for non-mpa sites
 mpa_vs_nonmpa_2012 <- mean_mpa_2012/mean_non_mpa_2012 # in 2012
 mpa_vs_nonmpa_2018 <- mean_mpa_2018/mean_non_mpa_2018 # in 2018
 
-# Note: size difference between 2012 and 2018
 
+# Note: size difference between 2012 and 2018
 
 ```
 
-Immediately following establishment of the MPAs in 2012, mean lobster size at sites inside MPAs (`r round(mean_mpa_2012, 2)` $\pm$ `r round(sd_mpa_2012, 2)` mm, n = `r n_mpa_2012`) was significantly different from that observed for lobsters in unprotected waters (`r round(mean_non_mpa_2012, 2)` $\pm$ `r round(sd_non_mpa_2012, 2)` mm, n = `r n_non_mpa_2012`; two-sample t-test, t(`r round(diff_2012_t$parameter, 2)`) = `r round(diff_2012_t$statistic, 2)`, *p* = `r round(diff_2012_t$p.value, 3)`), with lobsters measured inside MPAs roughly 10% smaller (Table 1). By 2018, however, mean lobster size inside MPAs (`r round(mean_mpa_2018, 2)` $\pm$ `r round(sd_mpa_2018, 2)` mm, n = `r n_mpa_2018`) still differed significantly from unprotected waters (`r round(mean_non_mpa_2018, 2)` $\pm$ `r round(sd_non_mpa_2018, 2)` mm, n = `r n_non_mpa_2018`; two-sample t-test, t(`r round(diff_2018_t$parameter, 2)`) = `r round(diff_2018_t$statistic, 2)`, *p* < 0.001), but this time the lobsters were about 5% larger in the MPA sites. 
+Immediately following establishment of the MPAs in 2012, mean lobster size at sites inside MPAs (`r round(mean_mpa_2012, 2)` $\pm$ `r round(sd_mpa_2012, 2)` mm, n = `r n_mpa_2012`) was significantly different from that observed for lobsters in unprotected waters (`r round(mean_non_mpa_2012, 2)` $\pm$ `r round(sd_non_mpa_2012, 2)` mm, n = `r n_non_mpa_2012`; two-sample t-test, t(`r round(diff_2012_t$parameter, 2)`) = `r round(diff_2012_t$statistic, 2)`, *p* = `r round(diff_2012_t$p.value, 3)`), with lobsters measured inside MPAs roughly 10% smaller (Table 1). By 2018, mean lobster size inside MPAs (`r round(mean_mpa_2018, 2)` $\pm$ `r round(sd_mpa_2018, 2)` mm, n = `r n_mpa_2018`) still differed significantly from unprotected waters (`r round(mean_non_mpa_2018, 2)` $\pm$ `r round(sd_non_mpa_2018, 2)` mm, n = `r n_non_mpa_2018`; two-sample t-test, t(`r round(diff_2018_t$parameter, 2)`) = `r round(diff_2018_t$statistic, 2)`, *p* < 0.001), however it was roughly 5% greater in the MPA sites. 
 
 Lobster size inside MPA sites increased significantly by an average of 15% from 2012 to 2018 (`r round(mean_mpa_2012, 2)` $\pm$ `r round(sd_mpa_2012, 2)` mm, n = `r n_mpa_2012` to `r round(mean_mpa_2018, 2)` $\pm$ `r round(sd_mpa_2018, 2)` mm, n = `r n_mpa_2018`; two-sample t-test, t(`r round(diff_mpa_t$parameter, 2)`) = `r round(diff_mpa_t$statistic, 2)`, *p* < 0.001)), while lobsters observed outside of MPAs showed a marginal decrease in mean size over the same time period (`r round(mean_non_mpa_2012, 2)` $\pm$ `r round(sd_non_mpa_2012, 2)` mm, n = `r n_non_mpa_2012` to `r round(mean_non_mpa_2018, 2)` $\pm$ `r round(sd_non_mpa_2018, 2)` mm, n = `r n_non_mpa_2018`) that was non-significant (two-sample t-test, t(`r round(diff_non_mpa_t$parameter, 2)`) = `r round(diff_non_mpa_t$statistic, 2)`, *p* = `r round(diff_non_mpa_t$p.value, 2)`). 
 
@@ -283,5 +285,17 @@ lobster_table
 
 ***
 ### References
-1. Tegner, M. J., and L. A. Levin. "Spiny lobsters and sea urchins: analysis of a predator-prey interaction." Journal of Experimental Marine Biology and Ecology 73.2 (1983): 125-150.
 
+1. "California Marine Protected Areas (MPAs)". *California Department of Fish and Wildlife*, State of California, 2019. https://www.wildlife.ca.gov/Conservation/Marine/MPAs
+
+2. "MPA Monitoring." *California MPAs*. http://californiampas.org/mpa-monitoring
+
+3. Tegner, M. J., and L. A. Levin. "Spiny lobsters and sea urchins: analysis of a predator-prey interaction." Journal of Experimental Marine Biology and Ecology 73.2 (1983): 125-150.
+
+4. Ling, S. D., et al. "Global regime shift dynamics of catastrophic sea urchin overgrazing." Philosophical Transactions of the Royal Society B: Biological Sciences 370.1659 (2015): 20130269.
+
+5. Breen, P. A., and K. H. Mann. "Changing lobster abundance and the destruction of kelp beds by sea urchins." Marine Biology 34.2 (1976): 137-142.
+
+6. Wharton, W. G., and K. H. Mann. "Relationship between destructive grazing by the sea urchin, Strongylocentrotus droebachiensis, and the abundance of American lobster, Homarus americanus, on the Atlantic coast of Nova Scotia." Canadian Journal of Fisheries and Aquatic Sciences 38.11 (1981): 1339-1349.
+
+7. Reed D. 2019. SBC LTER: Reef: Abundance, size and fishing effort for California Spiny Lobster (Panulirus interruptus), ongoing since 2012. Environmental Data Initiative. https://doi.org/10.6073/pasta/a593a675d644fdefb736750b291579a0. Dataset accessed 11/14/2019.
