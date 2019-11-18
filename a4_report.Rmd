@@ -2,7 +2,7 @@
 title: "Spiny lobster size and abundance along the Santa Barbara coast"
 subtitle: "Changes inside and outside Marine Protected Areas from 2012-2018"
 author: "Cori Lopazanski, Kai Kopecky"
-date: "11/14/2019"
+date: "11/18/2019"
 output: html_document
 ---
 
@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = FALSE, #exclude code from knitted document
 
 Marine Protected Areas (MPAs) have been established along the California coast to protect coastal species and their habitat through regulation of fishing and other potentially harmful human activities^1^. Monitoring efforts have been implemented to assess the effectiveness of these MPAs by comparing population characteristics of species inside and outside of the protected areas^2^. One such effort, undertaken by the Santa Barbara Coastal Long Term Ecological Research (SBC LTER) program, conducts yearly monitoring of kelp forest species in the Santa Barbara Channel inside and outside of MPAs. Within the Santa Barbara Channel, the California Spiny Lobster (*Panulirus interruptus*) is currently a species of interest, as it provides a lucrative fishery but also serves an important role in maintaining kelp forest ecosystems through predation of sea urchins^3^. Without predatory regulation, sea urchins can reach abundances high enough to decimate kelp populations and induce unfavorable ecosystem shifts from kelp forests to urchin barrens^4^. Excessive fishing of other species of lobster has been implicated in causing subsequent overgrazing of macroalgal communities by sea urchins^5,^ ^6^. Here, we assess impacts of fishing pressure on population characteristics of the California Spiny lobster from 2012-2018.
 
-![***Figure 1:*** California Spiny Lobster, *Panilurus interruptus*. Photographer: Joel Sartore, National Geographic Photographer ([source](https://www.joelsartore.com/inv002-00049/))](lobster.jpg)
+![***Figure 1:*** California Spiny Lobster, *Panulirus interruptus*. Photographer: Joel Sartore, National Geographic Photographer ([source](https://www.joelsartore.com/inv002-00049/))](lobster.jpg)
 
 ***
 ### Data and methods 
