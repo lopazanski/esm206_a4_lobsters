@@ -16,12 +16,11 @@ Marine Protected Areas (MPAs) have been established along the California coast t
 ***
 ### Data and methods 
 
-Data for California spiny lobster abundance and size were collected and provided by researchers with the Santa Barbara Coastal Long-Term Ecological Research Program (SBC LTER)^7^. Divers collected annual estimates from 2012-2018 at five long-term kelp forest sites. Two sites (Naples and Isla Vista) are located in designated MPAs, which were created on 2012-01-01. The other three sites (Mohawk Reef, Carpinteria, and Arroyo Quemado) are located in unprotected areas. Estimates were collected annually in late summer, before the start of the fishing season, by counting lobsters to quantify abundance and visually estimating the carapace length (mm) for size information across a 40-meter transect at the five sites. 
+Data for California Spiny Lobster abundance and size were collected and provided by researchers with the SBC LTER^7^. Divers collected annual estimates from 2012-2018 at five long-term kelp forest sites. Two sites (Naples and Isla Vista) are located in designated MPAs, which were created on 2012-01-01. The other three sites (Mohawk Reef, Carpinteria, and Arroyo Quemado) are located in unprotected areas. Estimates were collected annually in late summer, before the start of the fishing season, by counting lobsters to quantify abundance and visually estimating the carapace length (mm) for size information across a 40-meter transect at the five sites. 
 
 Changes in annual lobster abundance over time were examined for each site by comparing the total lobster count for each year from 2012-2018. Size distributions were examined by comparing the size composition (mm) of the lobsters measured at each site in 2012 and in 2018. Mean lobster size was compared for lobsters measured in MPAs versus unprotected waters in 2012 and in 2018 using two-sample t-tests (alpha = 0.5 throughout). 
 
 All data preparation and analyses were completed using R software (version 3.6.1) and RStudio (version 1.2.5001).
-
 
 ***
 ### Results 
